@@ -10,16 +10,17 @@
     let mData = [
         ["速度77", 21], ["力量72", 56], ["防守46", 46], ["射门50", 50], ["传球80", 80]
     ]
-    let mCount = mData.length;
-    let mCenter = mW / 2;
-    let mRadius = mCenter - 50;
-    let mAngle = Math.PI * 2 / mCount;
-    let mCtx = null;
+    let mCount = mData.length; //边数
+    let mCenter = mW / 2; //中心点
+    let mRadius = mCenter - 50; //半径(减去的值用于给绘制的文本留空间)
+    let mAngle = Math.PI * 2 / mCount; //角度
+    let mCtx = null; 
     let mColorPolygon = '#B8B8B8'; //多边形颜色
-    let mColorLines = "#B8B8B8";
-    let mColorText = "#000000";
+    let mColorLines = "#B8B8B8"; //顶点连线颜色
+    let mColorText = "#FFFFFF";
     let radar = ref();
 
+    // 绘制多边形边
     const drawPolygon = (ctx => {
         ctx.save();
         ctx.strokeStyle = mColorPolygon;
@@ -37,6 +38,7 @@
 
             //画5条边
             for(let j = 0; j < mCount; j ++){
+                // TOOD: 画笔起始位置的代码就是下面这两行定义的，关键是了解cos和sin函数
                 let x = mCenter + currR * Math.cos(mAngle * j);
                 let y = mCenter + currR * Math.sin(mAngle * j);
                 ctx.lineTo(x, y);
@@ -48,6 +50,7 @@
         ctx.restore();
     })
 
+    //顶点连线
     const drawLines = (ctx => {
         ctx.save();
         ctx.beginPath();
@@ -55,6 +58,7 @@
 
         for(let i = 0; i < mCount; i ++){
             let x = mCenter + mRadius * Math.cos(mAngle * i);
+            console.log(x)
             let y = mCenter + mRadius * Math.sin(mAngle * i);
             ctx.moveTo(mCenter, mCenter);
             ctx.lineTo(x, y);
@@ -64,6 +68,7 @@
         ctx.restore();
     });
 
+    //数据点之间的连线
     const drawLines1 = (ctx => {
         ctx.save();
         ctx.beginPath();
@@ -94,6 +99,7 @@
         ctx.restore();
     });
 
+    //绘制文本
     const drawText = (ctx => {
         ctx.save();
         let fontSize = mCenter / 12;
@@ -121,6 +127,7 @@
         ctx.restore();
     });
 
+    //绘制数据区域
     const drawRegion = (ctx => {
         ctx.save();
         ctx.beginPath();
@@ -136,6 +143,7 @@
         ctx.restore();
     });
 
+    //画点
     const drawCircle = (ctx => {
         ctx.save();
 
@@ -154,6 +162,7 @@
     });
 
     onMounted(() => {
+        // 初始化
         radar.value.height = mH;
         radar.value.width = mW;
         mCtx = radar.value.getContext('2d');
